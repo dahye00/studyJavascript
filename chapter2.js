@@ -127,10 +127,21 @@ console.log(
         _get('age')));
 
 console.clear();
+/* _rest함수 */
+//배열을 원하는 길이만큼 자른다
+var slice = Array.prototype.slice;
+function _rest(list, num) {
+    return slice.call(list, num || 1);
+}
 
 /* reduce함수 */
 function _reduce(list, iter, memo) {
     //리스트의 수만큼 fn을 반복
+    if(arguments.length == 2) {
+        memo = list[0];
+        list = _rest(list);
+    }
+
     _each(list, function(val) {
         memo = iter(memo, val);
     });
@@ -143,3 +154,9 @@ function add(a, b) {
 
 console.log(_reduce([1, 2, 3], add, 0));
 //0부터 시작해서 1, 2, 3을 순서대로 더해라
+
+//세번째 인자를 생략해서 reduce함수 사용하기
+console.log(_reduce([1, 2, 3, 4], add));
+
+//세번째 인자를 생략해서 reduce함수 사용하기
+console.log(_reduce([1, 2, 3, 4], add, 20));
