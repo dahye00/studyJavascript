@@ -114,7 +114,6 @@ console.log(
     _map(over_30, function(user){return user.age})
 );
 
-console.clear();
 //_get을 사용하여 더 간결하게 표현하기
 //30세 이상인 users의 names를 거른다.
 console.log(
@@ -126,3 +125,21 @@ console.log(
     _map(
         _filter(users, function(user){return user.age < 30 }),
         _get('age')));
+
+console.clear();
+
+/* reduce함수 */
+function _reduce(list, iter, memo) {
+    //리스트의 수만큼 fn을 반복
+    _each(list, function(val) {
+        memo = iter(memo, val);
+    });
+    return memo;
+}
+
+function add(a, b) {
+    return a + b;
+}
+
+console.log(_reduce([1, 2, 3], add, 0));
+//0부터 시작해서 1, 2, 3을 순서대로 더해라
