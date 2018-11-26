@@ -50,6 +50,47 @@ function _curryr(fn) {
     };
 }
 
+/* _rest함수 */
+//배열을 원하는 길이만큼 자른다
+var slice = Array.prototype.slice;
+function _rest(list, num) {
+    return slice.call(list, num || 1);
+}
+
+/* reduce함수 */
+function _reduce(list, iter, memo) {
+    //리스트의 수만큼 fn을 반복
+    if(arguments.length == 2) {
+        memo = list[0];
+        list = _rest(list);
+    }
+
+    _each(list, function(val) {
+        memo = iter(memo, val);
+    });
+    return memo;
+}
+
+/* 파이프 라인 */
+//인자로 받은 함수를 연속적으로 실행해주는 함수
+//파이프라인의 실행결과는 함수이다.
+function _pipe() {
+    var fns = arguments;
+    return function(arg) {
+        return _reduce(fns, function(arg, fn) {
+            return fn(arg);
+        }, arg);
+    }
+}
+
+/* _go */
+//즉시 실행되는 파이프 함수
+function _go(arg) {
+    var fns = _rest(arguments);//첫번째 넣은 값을 생략하기 위한 함수
+    return _pipe.apply(null, fns)(arg);
+}
+
+
 //입력된 obj가 null이 아닐 때 obj의 값을 출력하는 함수
 var _get = _curryr(function(obj, key) {
     return (obj == null) ? undefined : obj[key];
@@ -127,26 +168,6 @@ console.log(
         _get('age')));
 
 console.clear();
-/* _rest함수 */
-//배열을 원하는 길이만큼 자른다
-var slice = Array.prototype.slice;
-function _rest(list, num) {
-    return slice.call(list, num || 1);
-}
-
-/* reduce함수 */
-function _reduce(list, iter, memo) {
-    //리스트의 수만큼 fn을 반복
-    if(arguments.length == 2) {
-        memo = list[0];
-        list = _rest(list);
-    }
-
-    _each(list, function(val) {
-        memo = iter(memo, val);
-    });
-    return memo;
-}
 
 function add(a, b) {
     return a + b;
@@ -163,18 +184,6 @@ console.log(_reduce([1, 2, 3, 4], add, 20));
 
 console.clear();
 
-/* 파이프 라인 */
-//인자로 받은 함수를 연속적으로 실행해주는 함수
-//파이프라인의 실행결과는 함수이다.
-function _pipe() {
-    var fns = arguments;
-    return function(arg) {
-        return _reduce(fns, function(arg, fn) {
-            return fn(arg);
-        }, arg);
-    }
-}
-
 var f1 = _pipe(
     function(a) {return a + 1;},//2
     function(a) {return a * 2;},//4
@@ -182,13 +191,6 @@ var f1 = _pipe(
 )
 
 console.log(f1(1));//1
-
-/* _go */
-//즉시 실행되는 파이프 함수
-function _go(arg) {
-    var fns = _rest(arguments);//첫번째 넣은 값을 생략하기 위한 함수
-    return _pipe.apply(null, fns)(arg);
-}
 
 _go(
     1,
