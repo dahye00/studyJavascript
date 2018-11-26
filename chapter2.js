@@ -160,3 +160,81 @@ console.log(_reduce([1, 2, 3, 4], add));
 
 //세번째 인자를 생략해서 reduce함수 사용하기
 console.log(_reduce([1, 2, 3, 4], add, 20));
+
+console.clear();
+
+/* 파이프 라인 */
+//인자로 받은 함수를 연속적으로 실행해주는 함수
+//파이프라인의 실행결과는 함수이다.
+function _pipe() {
+    var fns = arguments;
+    return function(arg) {
+        return _reduce(fns, function(arg, fn) {
+            return fn(arg);
+        }, arg);
+    }
+}
+
+var f1 = _pipe(
+    function(a) {return a + 1;},//2
+    function(a) {return a * 2;},//4
+    function(a) {return a / 4;}//1
+)
+
+console.log(f1(1));//1
+
+/* _go */
+//즉시 실행되는 파이프 함수
+function _go(arg) {
+    var fns = _rest(arguments);//첫번째 넣은 값을 생략하기 위한 함수
+    return _pipe.apply(null, fns)(arg);
+}
+
+_go(
+    1,
+    function(a) {return a + 1},//2
+    function(a) {return a * 2},//4
+    function(a) {return a / 2},
+    console.log);//2
+    //console.log자체도 함수이기 때문에 실행결과는 console.log(args) 형태로 담기게 된다.
+
+//_go를 사용하여 코드 줄이기
+//30세 이상인 users의 names를 거른다.
+_go(
+    users,
+    function(users){return _filter(users, function(user) {return user.age >= 30})},
+    function(users){return _map(users, _get('name'))},
+    console.log);
+
+var _map = _curryr(_map),
+    _filter = _curryr(_filter);
+
+_go(
+    users,
+    _filter(user => user.age >= 30),
+    _map(_get('name')),
+    console.log);
+//30세 미만인 users의 ages를 거른다.
+_go(
+    users,
+    _filter(user => user.age < 30),
+    _map(_get('age')),
+    console.log);
+
+/*화살표 함수*/
+var a = function(user) {return user.age > 30;};
+var a = user => user.age >= 30;
+
+//인자가 두개일 때
+var add = function(a, b) {return a + b};
+var add = (a, b) => a + b;
+
+//내용이 길어질 때
+var add = (a, b) => {
+    //
+    //
+    return a + b;
+};
+
+//객체를 만들며 즉시 리턴
+var add = (a, b) => ({val : a + b});
