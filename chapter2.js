@@ -27,8 +27,21 @@ function _map(list, mapper) {
 
 /* each */
 //for문을 좀 더 간결하게 보이도록 하기 위한 함수
+
+//_keys 만들기
+function _keys(obj) {//null이 아니면 key값 반환하기
+    return _is_object(obj) ? Object.keys(obj) : [];
+}
+
+//_keys에서도 _is_object인지 검사하여 null에러 안나게 하기
+function _is_object(obj) {
+    return typeof obj == "object" && !!obj;
+}
+
 function _each(list, iter) {
-    for(var i = 0; i< list.length; i++) {
+//each에 null 넣어도 에러 안나게 하기 (_key이용)
+    var keys = _keys(list);
+    for(var i = 0, len = keys.length; i < len; i++) {
         iter(list[i]);
     }
     return list;
@@ -68,6 +81,7 @@ function _reduce(list, iter, memo) {
     _each(list, function(val) {
         memo = iter(memo, val);
     });
+
     return memo;
 }
 
@@ -233,10 +247,22 @@ var add = (a, b) => a + b;
 
 //내용이 길어질 때
 var add = (a, b) => {
-    //
-    //
+    /*
+        코드내용
+    */
     return a + b;
 };
 
 //객체를 만들며 즉시 리턴
 var add = (a, b) => ({val : a + b});
+
+console.clear();
+/* each의 외부 다형성 높이기 */
+//함수형 프로그래밍에서는 언제, 어디서 null이 나와도 흘려넘길 수 있는전략을 취하게 된다.
+
+console.log(_keys({name : 'ID', age : 13}));//name, age 출력
+console.log(_keys(1, 2, 3, 4));//key value형태가 아닌경우 []출력
+console.log(_keys(10));
+console.log(_keys(null));//빈값이므로 []출력
+
+_each(null,console.log);
