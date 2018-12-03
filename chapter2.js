@@ -306,3 +306,30 @@ console.log(_values(users[0]));
 console.log(_pluck(users,'age'));
 console.log(_pluck(users,'name'));
 console.log(_pluck(users,'id'));
+
+console.clear();
+//2. 거르기 - _filter
+//filter : 어떤 값이 true일때만 값을 꺼냄
+//reject : 어떤값이 false일때만 값을 꺼냄
+console.log(
+    _filter(users, function(user) { return user.age > 30;})
+);
+
+function _reject(data, predi) {
+    return _filter(data, _negate(predi));
+}
+
+function _negate(func) {
+    return function(val) {
+        return !func(val);
+    }
+}
+
+console.log(
+    _reject(users, function(user) { return user.age > 30;})
+);
+
+//compact
+//긍정적인 함수만 남김
+var _compact = _filter(_identity);
+console.log(_compact([0, 1, 2, null, false]));
