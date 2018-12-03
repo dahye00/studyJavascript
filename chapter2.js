@@ -104,6 +104,21 @@ function _go(arg) {
     return _pipe.apply(null, fns)(arg);
 }
 
+//map을 이용하여 _values 구현하기
+function _values(data) {//배열이 순서대로있지않고 key, value로 있을 때 value를 꺼내는 함수
+    return _map(data, _identity);
+};
+
+function _identity(val) {
+    return val;
+}
+
+/*pluck*/
+function _pluck(data, key) {//value의 배열을 꺼내는 함수
+    return _map(data, _get(key));
+}
+
+
 
 //입력된 obj가 null이 아닐 때 obj의 값을 출력하는 함수
 var _get = _curryr(function(obj, key) {
@@ -278,3 +293,16 @@ _each({
     //따라서 parameter는 꼭 name이 아니어도 됨.
     console.log(a);
 });
+console.clear()
+/* collection 중심 프로그래밍 */
+//1.수집하기 - mapper
+//외부의 값을 수집할 때에는 고민하지말고 map 사용하기
+//values
+console.log( _map(users, function(user) { return user.name; }));
+console.log(users[0]);
+console.log(_keys(users[0]));
+console.log(_values(users[0]));
+//pluck
+console.log(_pluck(users,'age'));
+console.log(_pluck(users,'name'));
+console.log(_pluck(users,'id'));
