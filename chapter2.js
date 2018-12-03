@@ -42,7 +42,7 @@ function _each(list, iter) {
 //each에 null 넣어도 에러 안나게 하기 (_key이용)
     var keys = _keys(list);
     for(var i = 0, len = keys.length; i < len; i++) {
-        iter(list[i]);
+        iter(list[keys[i]]);
     }
     return list;
 }
@@ -266,3 +266,15 @@ console.log(_keys(10));
 console.log(_keys(null));//빈값이므로 []출력
 
 _each(null,console.log);
+
+console.clear();
+
+_each({
+    12 : "ID",
+    24 : "EF",
+    35 : "FS"
+},function(a) {
+    //숫자를 key로 인식해서 뒤에있는 value 값을 찾아줌.
+    //따라서 parameter는 꼭 name이 아니어도 됨.
+    console.log(a);
+});
