@@ -375,3 +375,27 @@ _go(
     _find_index(function(user) {return user.age < 30}),
     console.log
 )
+
+console.clear();
+//3. some - 조건에 맞는 값이 하나라도 있으면 true
+function _some(data, predi) {
+    return _find_index(data, predi || _identity) != -1;
+}//인덱스가 하나라도 있다면 true 반환
+
+console.log(_some([1, 2, 5, 10, 20], function(val) {return val > 10;}))
+
+//4. every - 모든 값이 조건에 맞아야 true
+function _every(data, predi) {
+    return _find_index(data, _negate(predi || _identity)) == -1;//하나도 false를 찾지 못했을 경우 true
+}
+
+console.log(_every([1, 2, 5, 10, 20], function(val) {return val > 10;}));
+
+//some과 every는 predicate를 생략해도 동작해야 함
+console.log(
+    _some([1, 2, 0, 10], _identity)
+);//=>true
+
+console.log(
+    _some([null, false, 0], _identity)
+)
