@@ -319,6 +319,8 @@ function _reject(data, predi) {
     return _filter(data, _negate(predi));
 }
 
+var _reject = _curryr(_reject);
+
 function _negate(func) {
     return function(val) {
         return !func(val);
@@ -399,3 +401,62 @@ console.log(
 console.log(
     _some([null, false, 0], _identity)
 )
+
+console.clear();
+
+//4. 접기 - reduce
+// find와 다르게 모든값을 다 확인한다.
+function _min(data) {
+    return _reduce(data, function(a, b) {
+        //순서와 상관없이 한가지 로직만
+        return a < b ? a : b;
+    });
+}
+console.log(_min([1, 2, 4, 10, 5, -1]));
+
+function _max(data) {
+    return _reduce(data, function(a, b) {
+        //순서와 상관없이 한가지 로직만
+        return a < b ? b : a;
+    });
+}
+
+console.log(_max([1, 4, 4, 10, 5, -1]));
+
+function _min_by(data, iter) {
+    return _reduce(data, function(a, b) {
+        return iter(a) < iter(b) ? a : b;
+    })
+}
+console.log(
+    _min_by([1, 4, 2, 10, 5, -1], Math.abs)
+);
+
+function _max_by(data, iter) {
+    return _reduce(data, function(a, b){
+        return iter(a) < iter(b) ? b : a;
+    })
+}
+
+console.log(
+    _max_by([1, 4, -20, 10, 5, -1], Math.abs)
+);
+
+//가장 어린 회원 출력해보기
+console.log(
+    _min_by(users, function(user) {
+        return user.age;
+    })
+)
+
+var _min_by = _curryr(_min_by),
+    _max_by = _curryr(_max_by);
+
+_go(
+    users,
+    _filter(user=>user.age > 30),
+    _min_by(_get('age')),
+    _get('name'),
+    console.log
+)
+//함수형 프로그래밍: 함수조합으로 프로그래밍 하는 것!
