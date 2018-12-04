@@ -333,3 +333,45 @@ console.log(
 //긍정적인 함수만 남김
 var _compact = _filter(_identity);
 console.log(_compact([0, 1, 2, null, false]));
+
+console.clear();
+//1. find 만들기
+//첫번째 값만을 리턴
+var _find = _curryr(function(list, predi) {
+    var keys = _keys(list);
+    for(var i = 0, len = keys.length; i < len; i++) {
+        var val = list[keys[i]];
+        if(predi(val)) return val;
+    }
+});
+
+console.log(
+    _find(users, function(user) {return user.age > 30})
+)
+
+//find_index
+//값을 만났을 때 해당하는 값의 인덱스를 return
+var _find_index = _curryr(function(list, predi) {
+    var keys = _keys(list);
+    for(var i = 0, len = keys.length; i < len; i++) {
+        if(predi(list[keys[i]])) return i;
+    }
+    return -1;
+});
+
+console.log(
+    _find_index(users, function(user) {return user.age > 30})
+)
+
+_go(
+    users,
+    _find(function(user) {return user.age > 30}),
+    _get('name'),
+    console.log
+);
+
+_go(
+    users,
+    _find_index(function(user) {return user.age < 30}),
+    console.log
+)
