@@ -459,4 +459,34 @@ _go(
     _get('name'),
     console.log
 )
+console.clear();
 //함수형 프로그래밍: 함수조합으로 프로그래밍 하는 것!
+//group_by-접기특화 함수
+//특정 기준을 기준으로 데이터를 묶어주는 것
+var _group_by = _curryr(function(data, iter) {
+    return _reduce(data, function(grouped, val) {
+        _push(grouped, iter(val), val);
+        return grouped;
+    }, {})
+})
+
+function _push(obj, key, val) {//직접 값을 변경하는 함수
+    (obj[key] = obj[key] || []).push(val);
+    return obj;
+}
+
+_go(
+    users,
+    _group_by(function(user) {
+        return user.age;
+    }),
+    console.log
+)
+
+_go(
+    users,
+    _group_by(function(user) {
+        return user.age - user.age % 10;
+    }),
+    console.log
+)
