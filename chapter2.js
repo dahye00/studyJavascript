@@ -21,7 +21,7 @@ function _filter(list, predi) {//순수함수. 기존배열 그대로. 새로운
 /* map */
 function _map(list, mapper) {
     var new_list = [];
-    _each(list, function(val) {new_list.push(mapper(val));});
+    _each(list, function(val, key) {new_list.push(mapper(val, key));});
     return new_list;
 }
 
@@ -42,7 +42,7 @@ function _each(list, iter) {
 //each에 null 넣어도 에러 안나게 하기 (_key이용)
     var keys = _keys(list);
     for(var i = 0, len = keys.length; i < len; i++) {
-        iter(list[keys[i]]);
+        iter(list[keys[i]], keys[i]);
     }
     return list;
 }
@@ -488,5 +488,36 @@ _go(
     _group_by(function(user) {
         return user.age - user.age % 10;
     }),
+    console.log
+)
+
+var _count_by = _curryr(function(data, iter) {
+    return _reduce(data, function(count, val) {
+        return _inc(count, iter(val));
+    }, {});
+})
+
+var _inc = function(obj, key){
+    (obj[key]) ? obj[key]++ : obj[key] = 1;
+    return obj;
+}
+
+console.log(_count_by(users, function(user) {
+    return user.age;
+}));
+
+var _pairs = _map((val, key) => [key, val]);
+
+console.log(_pairs(users[0]));
+
+console.clear();
+
+_go(
+    users,
+    _count_by(function(user) {
+        return user.age - user.age % 10;
+    }),
+    _map((count, key) => `<li>${key}대는 ${count}명 입니다.</li>`),
+    list=>'<ul>' + list.join('') + '</ul>',
     console.log
 )
