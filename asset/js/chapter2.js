@@ -3,8 +3,8 @@ var users = [
   { id: 2, name: 'BJ', age: 32},
   { id: 3, name: 'JM', age: 32},
   { id: 4, name: 'PJ', age: 27},
-  { id: 5, name: 'HA', age: 25},
-  { id: 6, name: 'JE', age: 26},
+  { id: 5, name: 'HA', age: 15},
+  { id: 6, name: 'JE', age: 16},
   { id: 7, name: 'JI', age: 31},
   { id: 8, name: 'MP', age: 23},
 ]
@@ -512,8 +512,7 @@ console.log(_pairs(users[0]));
 
 console.clear();
 
-_go(
-    users,
+var f1 = _pipe(
     _count_by(function(user) {
         return user.age - user.age % 10;
     }),
@@ -521,3 +520,9 @@ _go(
     list=>'<ul>' + list.join('') + '</ul>',
     document.write.bind(document)
 )
+
+f1(users);
+
+var f2 = _pipe(_reject(user => user.age < 20), f1);
+
+f2(users);
