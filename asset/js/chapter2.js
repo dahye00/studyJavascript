@@ -517,7 +517,7 @@ _go(
     _count_by(function(user) {
         return user.age - user.age % 10;
     }),
-    list=>'<ul>' + list.join('') + '</ul>',
     _map((count, key) => `<li>${key}대는 ${count}명 입니다.</li>`),
-    console.log
+    list=>'<ul>' + list.join('') + '</ul>',
+    document.write.bind(document)
 )
